@@ -1,6 +1,6 @@
 import styles from './Product.module.scss';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import ProductImage from '../ProductImage/ProductImage';
 import ProductForm from '../ProductForm/ProductForm';
 
@@ -9,11 +9,12 @@ const Product = ({ name, title, basePrice, colors, sizes }) => {
   const [currentColor, setCurrentColor] = useState(colors[0]);
   const [currentSize, setCurrentSize] = useState(sizes[0].name);
 
-  const getPrice = () => {
+  const getPrice = useMemo(() => {
+    console.log('price changed')
     const clickedSize = sizes.find(element => element.name === currentSize)
 
     return basePrice + clickedSize.additionalPrice;
-  }
+  }, [currentSize, basePrice, sizes]);
 
   const handleSubmit = e => {
     e.preventDefault();
@@ -32,7 +33,7 @@ const Product = ({ name, title, basePrice, colors, sizes }) => {
       <div>
         <header>
           <h2 className={styles.name}>{title}</h2>
-          <span className={styles.price}>{getPrice()}</span>
+          <span className={styles.price}>{getPrice}</span>
         </header>
         <ProductForm handleSubmit={handleSubmit} sizes={sizes} colors={colors} currentColor={currentColor} currentSize={currentSize} setCurrentColor={setCurrentColor} setCurrentSize={setCurrentSize}/>
       </div>
